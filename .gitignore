@@ -3,5 +3,5 @@
 .vscode
 .DS_Store
 .cache
-__pycache__/
-data/
+backend/dietter/__pycache__/*
+data/*
