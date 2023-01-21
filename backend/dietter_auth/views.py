@@ -34,8 +34,6 @@ class LoginView(ObtainAuthToken):
         token, _ = Token.objects.get_or_create(user=user)
         return Response({
             'token': token.key,
-            'user_id': user.pk,
-            'email': user.email
         })
 
 
