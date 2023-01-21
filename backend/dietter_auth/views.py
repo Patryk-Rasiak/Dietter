@@ -17,10 +17,17 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(status=status.HTTP_201_CREATED, headers=headers)
+
 
 class LoginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
 
@@ -36,7 +43,7 @@ class LogoutView(generics.DestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
 
