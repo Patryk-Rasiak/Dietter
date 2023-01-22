@@ -24,7 +24,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dietter_auth',
-    'user_profile',
+    'users',
+    'meals',
     'rest_framework',
     'rest_framework.authtoken',
 ]

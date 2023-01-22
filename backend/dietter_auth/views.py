@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework import status
 
-from user_profile.serializers import UserSerializer
+from users.serializers import UserSerializer
 
 
 class RegisterView(generics.CreateAPIView):
