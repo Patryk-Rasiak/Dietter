@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework import status
 
-from .serializers import UserSerializer
+from user_profile.serializers import UserSerializer
 
 
 class RegisterView(generics.CreateAPIView):
@@ -44,4 +44,3 @@ class LogoutView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
-
