@@ -22,7 +22,7 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(status=status.HTTP_201_CREATED, headers=headers)
+        return Response({"info": "Successfully registered"}, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class LoginView(ObtainAuthToken):
@@ -43,4 +43,4 @@ class LogoutView(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(data={"info": "Successfully logged out"}, status=status.HTTP_200_OK)

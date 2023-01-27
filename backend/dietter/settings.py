@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'dietter_auth',
     'users',
     'meals',
+    'diets',
     'rest_framework',
     'rest_framework.authtoken',
 ]

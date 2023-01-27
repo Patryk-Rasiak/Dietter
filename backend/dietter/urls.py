@@ -6,4 +6,5 @@ urlpatterns = [
     path('auth/', include('dietter_auth.urls')),
     path('user/', include('users.urls')),
     path('meals/', include('meals.urls')),
+    path('diets/', include('diets.urls')),
 ]

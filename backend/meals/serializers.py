@@ -18,9 +18,19 @@ class NutritionalValuesSerializer(serializers.ModelSerializer):
         fields = ('calories', 'protein', 'carbohydrates', 'fat')
 
 
-class MealSerializer(serializers.ModelSerializer):
-    ingredients = IngredientSerializer(many=True, required=True)
-    nutritional_values = NutritionalValuesSerializer(required=True)
+# class MealIdSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Meal
+#         fields = ('id',)
+#
+
+class CreateMealSerializer(serializers.ModelSerializer):
+    ingredients = IngredientSerializer(many=True, required=True, write_only=True)
+    nutritional_values = NutritionalValuesSerializer(required=True, write_only=True)
+    photo = serializers.ImageField(write_only=True, allow_null=True)
+    is_public = serializers.BooleanField(write_only=True)
+    recipe = serializers.CharField(write_only=True)
 
     class Meta:
         model = Meal
@@ -29,18 +39,22 @@ class MealSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ingredients_data = validated_data.pop('ingredients')
         nutritional_values_data = validated_data.pop('nutritional_values')
+        nutritional_values = NutritionalValues.objects.create(**nutritional_values_data)
         user = self.context['request'].user
-        meal = Meal.objects.create(author=user, **validated_data)
-        meal.save()
+        meal = Meal.objects.create(author=user, nutritional_values=nutritional_values, **validated_data)
 
+        ingredients = []
         for ingredient in ingredients_data:
-            Ingredient.objects.create(meal=meal, **ingredient)
-        NutritionalValues.objects.create(meal=meal, **nutritional_values_data)
+            ingredients.append(Ingredient.objects.create(**ingredient))
 
+        meal.ingredients.add(*ingredients)
+
+        meal.save()
         return meal
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['author'] = instance.author.username
-        return data
 
+class ListMealSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Meal
+        fields = ('id', 'name')
