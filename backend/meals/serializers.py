@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from .models import Meal, Ingredient, NutritionalValues
-from users.serializers import UserSerializer
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -17,13 +16,6 @@ class NutritionalValuesSerializer(serializers.ModelSerializer):
         model = NutritionalValues
         fields = ('calories', 'protein', 'carbohydrates', 'fat')
 
-
-# class MealIdSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = Meal
-#         fields = ('id',)
-#
 
 class CreateMealSerializer(serializers.ModelSerializer):
     ingredients = IngredientSerializer(many=True, required=True, write_only=True)
