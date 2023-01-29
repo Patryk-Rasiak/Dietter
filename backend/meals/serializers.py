@@ -47,17 +47,24 @@ class CreateMealSerializer(serializers.ModelSerializer):
 
 
 class ListMealSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(slug_field='username', read_only=True)
     nutritional_values = NutritionalValuesSerializer()
+    avg_rating = serializers.FloatField()
+    ratings_count = serializers.IntegerField()
 
     class Meta:
         model = Meal
-        fields = ('id', 'name', 'meal_type', 'nutritional_values')
+        fields = ('id', 'author', 'name', 'meal_type', 'nutritional_values', 'avg_rating', 'ratings_count')
 
 
 class RetrieveMealSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(slug_field='username', read_only=True)
     ingredients = IngredientSerializer(many=True)
     nutritional_values = NutritionalValuesSerializer()
+    avg_rating = serializers.FloatField()
+    ratings_count = serializers.IntegerField()
 
     class Meta:
         model = Meal
-        fields = ('id', 'author', 'name', 'photo', 'recipe', 'is_public', 'ingredients', 'nutritional_values')
+        fields = ('id', 'author', 'name', 'photo', 'recipe', 'is_public', 'ingredients', 'nutritional_values',
+                  'avg_rating', 'ratings_count')

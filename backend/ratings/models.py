@@ -11,13 +11,3 @@ class Rating(models.Model):
     description = models.TextField(blank=True, null=True)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name='ratings', null=True, blank=True)
     diet = models.ForeignKey(Diet, on_delete=models.CASCADE, related_name='ratings', null=True, blank=True)
-
-    def _update_rating_stats(self):
-        rated_item = self.meal if self.meal else self.diet
-        rated_item.average_rating = rated_item.ratings.all().aggregate(models.Avg('value'))['value__avg']
-        rated_item.ratings_count = rated_item.ratings.count()
-        rated_item.save()
-
-    def save(self, *args, **kwargs):
-        self._update_rating_stats()
-        super().save(*args, **kwargs)

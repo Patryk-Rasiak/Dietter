@@ -35,7 +35,7 @@ class DietViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset.annotate(
             avg_rating=Round(Avg('ratings__value'), 1),
-            ratings_count=Count('ratings__value'),
+            ratings_count=Count('ratings', distinct=True),
             avg_calories=Cast(Avg('diet_days__meals__nutritional_values__calories'), IntegerField()),
             avg_protein=Cast(Avg('diet_days__meals__nutritional_values__protein'), IntegerField()),
             avg_carbohydrates=Cast(Avg('diet_days__meals__nutritional_values__carbohydrates'), IntegerField()),

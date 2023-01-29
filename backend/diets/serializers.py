@@ -45,6 +45,7 @@ class CreateDietSerializer(serializers.ModelSerializer):
 
 
 class ListDietSerializer(serializers.ModelSerializer):
+    creator = serializers.SlugRelatedField(slug_field='username', read_only=True)
     avg_calories = serializers.IntegerField()
     avg_protein = serializers.IntegerField()
     avg_carbohydrates = serializers.IntegerField()
@@ -54,13 +55,22 @@ class ListDietSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Diet
-        fields = ('id', 'creator', 'title', 'is_public', 'diet_length', 'avg_calories', 'avg_protein', 'avg_carbohydrates', 'avg_fat', 'avg_rating', 'ratings_count')
+        fields = ('id', 'creator', 'title', 'is_public', 'diet_length', 'avg_calories', 'avg_protein',
+                  'avg_carbohydrates', 'avg_fat', 'avg_rating', 'ratings_count')
 
 
 class RetrieveDietSerializer(serializers.ModelSerializer):
+    creator = serializers.SlugRelatedField(slug_field='username', read_only=True)
     diet_days = RetrieveDietDaySerializer(many=True)
+    avg_calories = serializers.IntegerField()
+    avg_protein = serializers.IntegerField()
+    avg_carbohydrates = serializers.IntegerField()
+    avg_fat = serializers.IntegerField()
+    avg_rating = serializers.FloatField()
+    ratings_count = serializers.IntegerField()
 
     class Meta:
         model = Diet
-        fields = ('id', 'creator', 'title', 'description', 'is_public', 'diet_length', 'diet_days', 'avg_calories')
+        fields = ('id', 'creator', 'title', 'description', 'is_public', 'diet_length', 'diet_days',
+                  'avg_calories', 'avg_protein', 'avg_carbohydrates', 'avg_fat', 'avg_rating', 'ratings_count')
 

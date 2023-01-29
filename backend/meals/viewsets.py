@@ -5,7 +5,8 @@ from rest_framework.decorators import action
 from .models import Meal
 from .serializers import CreateMealSerializer, ListMealSerializer, RetrieveMealSerializer
 from ratings.serializers import RatingSerializer
-from django.db.models import Q
+from django.db.models import Q, Avg, Count
+from django.db.models.functions import Round
 
 
 class MealViewSet(ModelViewSet):
@@ -23,11 +24,15 @@ class MealViewSet(ModelViewSet):
         return super().get_serializer(*args, **kwargs)
 
     def get_queryset(self):
+        queryset = self.queryset.annotate(
+            avg_rating=Round(Avg('ratings__value'), 1),
+            ratings_count=Count('ratings', distinct=True)
+        )
         if self.action in ('list', 'retrieve'):
-            return self.queryset.filter(Q(is_public=True) | Q(author=self.request.user))
+            return queryset.filter(Q(is_public=True) | Q(author=self.request.user))
         elif self.action == 'user_meals':
-            return self.queryset.filter(author=self.request.user)
-        return self.queryset
+            return queryset.filter(author=self.request.user)
+        return queryset
 
     def retrieve(self, request, *args, **kwargs):
         meal = self.get_object()
