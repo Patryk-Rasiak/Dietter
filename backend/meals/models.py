@@ -26,9 +26,17 @@ class Ingredient(models.Model):
 
 
 class Meal(models.Model):
+    TYPE_CHOICES = [
+        ('breakfast', 'breakfast'),
+        ('second_breakfast', 'second_breakfast'),
+        ('lunch', 'lunch'),
+        ('dinner', 'dinner'),
+        ('snacks', 'snacks')
+    ]
     author = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meals', default=None, null=True,
                                blank=True)
     name = models.CharField(max_length=40)
+    meal_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     photo = models.ImageField(upload_to='photos/', blank=True, null=True)
     recipe = models.TextField()
     is_public = models.BooleanField(default=False)

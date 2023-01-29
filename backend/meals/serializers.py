@@ -23,10 +23,11 @@ class CreateMealSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField(write_only=True, allow_null=True)
     is_public = serializers.BooleanField(write_only=True)
     recipe = serializers.CharField(write_only=True)
+    meal_type = serializers.CharField(write_only=True)
 
     class Meta:
         model = Meal
-        fields = ('id', 'name', 'photo', 'recipe', 'is_public', 'ingredients', 'nutritional_values')
+        fields = ('id', 'name', 'photo', 'recipe', 'is_public', 'meal_type', 'ingredients', 'nutritional_values')
 
     def create(self, validated_data):
         ingredients_data = validated_data.pop('ingredients')
@@ -46,7 +47,17 @@ class CreateMealSerializer(serializers.ModelSerializer):
 
 
 class ListMealSerializer(serializers.ModelSerializer):
+    nutritional_values = NutritionalValuesSerializer()
 
     class Meta:
         model = Meal
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'meal_type', 'nutritional_values')
+
+
+class RetrieveMealSerializer(serializers.ModelSerializer):
+    ingredients = IngredientSerializer(many=True)
+    nutritional_values = NutritionalValuesSerializer()
+
+    class Meta:
+        model = Meal
+        fields = ('id', 'author', 'name', 'photo', 'recipe', 'is_public', 'ingredients', 'nutritional_values')

@@ -3,7 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Meal
-from .serializers import CreateMealSerializer, ListMealSerializer
+from .serializers import CreateMealSerializer, ListMealSerializer, RetrieveMealSerializer
+from ratings.serializers import RatingSerializer
+from django.db.models import Q
 
 
 class MealViewSet(ModelViewSet):
@@ -15,14 +17,28 @@ class MealViewSet(ModelViewSet):
         kwargs.setdefault('context', self.get_serializer_context())
         if self.action == 'create':
             return CreateMealSerializer(*args, **kwargs)
+        elif self.action == 'retrieve':
+            return RetrieveMealSerializer(*args, **kwargs)
+
         return super().get_serializer(*args, **kwargs)
 
     def get_queryset(self):
-        if self.action == 'list':
-            return self.queryset.filter(is_public=True)
+        if self.action in ('list', 'retrieve'):
+            return self.queryset.filter(Q(is_public=True) | Q(author=self.request.user))
         elif self.action == 'user_meals':
             return self.queryset.filter(author=self.request.user)
         return self.queryset
+
+    def retrieve(self, request, *args, **kwargs):
+        meal = self.get_object()
+        meal_data = self.get_serializer(meal).data
+
+        rating = meal.ratings.filter(author=request.user).first()
+        if rating:
+            rating_serializer = RatingSerializer(rating)
+            meal_data['user_rating'] = rating_serializer.data
+
+        return Response(meal_data)
 
     @action(detail=False, methods=['get'])
     def user_meals(self, request):

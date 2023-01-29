@@ -9,7 +9,8 @@ class DietDay(models.Model):
 
 
 class Diet(models.Model):
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='diets', default=None, null=True, blank=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='diets',
+                                default=None, null=True, blank=True)
     title = models.CharField(max_length=40)
     diet_length = models.PositiveIntegerField(default=1)
     description = models.TextField(default='')
@@ -18,6 +19,3 @@ class Diet(models.Model):
 
     class Meta:
         unique_together = ('title', 'creator')
-
-
-
