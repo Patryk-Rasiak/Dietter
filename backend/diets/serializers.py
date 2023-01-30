@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from .models import Diet, DietDay
-from meals.serializers import ListMealSerializer
+from meals.serializers import DietDayMealSerializer
 
 
 class RetrieveDietDaySerializer(serializers.ModelSerializer):
-    meals = ListMealSerializer(many=True)
+    meals = DietDayMealSerializer(many=True)
 
     class Meta:
         model = DietDay

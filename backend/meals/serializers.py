@@ -45,6 +45,11 @@ class CreateMealSerializer(serializers.ModelSerializer):
         meal.save()
         return meal
 
+class DietDayMealSerializer(serializers.ModelSerializer):
+    nutritional_values = NutritionalValuesSerializer()
+    class Meta:
+        model = Meal
+        fields = ('id', 'name', 'nutritional_values')
 
 class ListMealSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field='username', read_only=True)

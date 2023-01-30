@@ -19,7 +19,7 @@ class DietViewSet(ModelViewSet):
                        'avg_protein',
                        'avg_carbohydrates',
                        'avg_fat',
-                       'average_rating',
+                       'avg_rating',
                        'ratings_count',
                        ]
     permission_classes = (IsAuthenticated,)

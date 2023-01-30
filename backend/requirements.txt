@@ -24,3 +24,4 @@ yarg==0.1.9
 python-dotenv==0.21.0
 Pillow==9.4.0
 django-filter==22.1
+django-cors-headers==3.13.0
